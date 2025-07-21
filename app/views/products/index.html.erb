@@ -1,4 +1,26 @@
-<h1>Welcome to Choco Explorer</h1>
-<p>Discover and explore chocolate products from around the world.</p>
+<h1>All Chocolates</h1>
 
-<p>Use the menu above to learn more about the project or browse our chocolate collection.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Brand</th>
+      <th>Origin Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= product.brand.name if product.brand %></td>
+        <td>
+          <% if product.countries.any? %>
+            <%= product.countries.map(&:name).join(", ") %>
+          <% else %>
+            Unknown
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
