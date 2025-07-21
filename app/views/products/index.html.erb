@@ -1,5 +1,12 @@
 <h1>All Chocolates</h1>
 
+<% @products.each do |product| %>
+  <h2>
+    <%= link_to product.name, product_path(product) %>
+  </h2>
+  <p><%= truncate(product.description, length: 100) %></p>
+<% end %>
+
 <table>
   <thead>
     <tr>
@@ -11,7 +18,7 @@
   <tbody>
     <% @products.each do |product| %>
       <tr>
-        <td><%= product.name %></td>
+        <td><%= link_to product.name, product_path(product) %></td>
         <td><%= product.brand.name if product.brand %></td>
         <td>
           <% if product.countries.any? %>

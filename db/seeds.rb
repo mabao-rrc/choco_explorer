@@ -35,7 +35,7 @@ products.each do |item|
     name: item["product_name"],
     ingredients: item["ingredients_text"] || "Unknown ingredients",
     nutrition_info: item["nutriments"]&.map { |k,v| "#{k}: #{v}" }&.join(", ") || "No nutrition info",
-    image_url: item["image_url"] || "",
+    image_url: item["image_url"].presence || "https://via.placeholder.com/300x400.png?text=No+Image",
     brand: brand
   )
 
