@@ -1,9 +1,74 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require 'open-uri'
+require 'json'
+require 'faker'
+
+puts "🌱 Seeding started..."
+
+# Clear existing records
+Review.delete_all
+CountryProduct.delete_all
+ProductCategory.delete_all
+Product.delete_all
+Brand.delete_all
+Category.delete_all
+Country.delete_all
+
+# API: Get chocolate data from OpenFoodFacts
+url = "https://world.openfoodfacts.org/category/chocolates.json"
+raw_data = URI.open(url).read
+parsed_data = JSON.parse(raw_data)
+
+products = parsed_data["products"].first(100) # Limit to 100 to stay efficient
+
+products.each do |item|
+  next if item["product_name"].blank?
+
+  # Brand
+  brand_name = item["brands"]&.split(",")&.first&.strip
+  next unless brand_name.present?
+  brand = Brand.find_or_create_by(name: brand_name) do |b|
+    b.description = Faker::Company.catch_phrase
+  end
+
+  # Product
+  product = Product.create!(
+    name: item["product_name"],
+    ingredients: item["ingredients_text"] || "Unknown ingredients",
+    nutrition_info: item["nutriments"]&.map { |k,v| "#{k}: #{v}" }&.join(", ") || "No nutrition info",
+    image_url: item["image_url"] || "",
+    brand: brand
+  )
+
+  # Categories
+  (item["categories_tags"] || []).each do |cat_tag|
+    cat_name = cat_tag.split(":").last.gsub("-", " ").capitalize
+    category = Category.find_or_create_by(name: cat_name)
+    ProductCategory.create!(product: product, category: category)
+  end
+
+  # Countries
+  (item["countries_tags"] || []).each do |country_tag|
+    country_name = country_tag.split(":").last.gsub("-", " ").capitalize
+    country = Country.find_or_create_by(name: country_name)
+    CountryProduct.create!(product: product, country: country)
+  end
+
+  # Faker Reviews
+  rand(1..3).times do
+    Review.create!(
+      product: product,
+      reviewer_name: Faker::Name.name,
+      rating: rand(1..5),
+      comment: Faker::Quote.famous_last_words
+    )
+  end
+end
+
+puts "✅ Seeding complete!"
+puts "Brands: #{Brand.count}"
+puts "Products: #{Product.count}"
+puts "Categories: #{Category.count}"
+puts "Countries: #{Country.count}"
+puts "Reviews: #{Review.count}"
+puts "ProductCategories: #{ProductCategory.count}"
+puts "CountryProducts: #{CountryProduct.count}"
