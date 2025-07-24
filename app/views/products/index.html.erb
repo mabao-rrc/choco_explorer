@@ -30,6 +30,11 @@
       <% end %>
     </tbody>
   </table>
+
+  <!-- ✅ Pagination controls -->
+  <div style="margin-top: 1rem;">
+    <%= paginate @products %>
+  </div>
 <% else %>
   <p>No products available.</p>
 <% end %>

@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
         )
     end
 
-    @products = @products.distinct
+    @products = @products.distinct.page(params[:page]).per(6)
   end
 
   def show
