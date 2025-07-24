@@ -1,20 +1,16 @@
 # app/controllers/products_controller.rb
 class ProductsController < ApplicationController
   def index
-    @products = Product.includes(:brand, :categories)
+    @products = Product.includes(:brand, :categories, :countries)
 
-    # Filter by category first
-    if params[:category].present? && params[:category] != "all"
-      @products = @products.joins(:categories).where(categories: { name: params[:category] })
-    end
-
-    # Then filter by search query
     if params[:query].present?
       search_term = "%#{params[:query].downcase}%"
-      @products = @products.where(
-        "LOWER(products.name) LIKE ? OR LOWER(products.ingredients) LIKE ?",
-        search_term, search_term
-      )
+      @products = @products
+        .left_outer_joins(:brand, :categories, :countries)
+        .where(
+          "LOWER(products.name) LIKE :q OR LOWER(products.ingredients) LIKE :q OR LOWER(products.nutrition_info) LIKE :q OR LOWER(brands.name) LIKE :q OR LOWER(categories.name) LIKE :q OR LOWER(countries.name) LIKE :q",
+          q: search_term
+        )
     end
 
     @products = @products.distinct
@@ -27,3 +23,4 @@ class ProductsController < ApplicationController
     end
   end
 end
+
