@@ -1,4 +1,10 @@
-<h1>Chocolates</h1>
+<!-- 🧭 Top Row: Chocolates + Pagination -->
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1>Chocolates</h1>
+  <div class="pagination-container">
+    <%= paginate @products %>
+  </div>
+</div>
 
 <% if @products.any? %>
   <p>We have <%= @products.count %> products available.</p>
@@ -30,11 +36,6 @@
       <% end %>
     </tbody>
   </table>
-
-  <!-- ✅ Pagination controls -->
-  <div style="margin-top: 1rem;">
-    <%= paginate @products %>
-  </div>
 <% else %>
   <p>No products available.</p>
 <% end %>
