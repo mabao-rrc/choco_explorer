@@ -1,7 +1,7 @@
 # app/models/product.rb
 class Product < ApplicationRecord
   belongs_to :brand
-  has_many :reviews
+  has_many :reviews, dependent: :destroy
   has_many :product_categories
   has_many :categories, through: :product_categories
   has_many :country_products

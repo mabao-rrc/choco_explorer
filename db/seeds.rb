@@ -64,6 +64,12 @@ products.each do |item|
   end
 end
 
+  # Mark a few products as Bestsellers
+  puts "Marking a few products as Bestsellers..."
+  Product.limit(3).each do |product|
+    product.update!(name: "#{product.name} - Bestseller")
+  end
+
 puts "✅ Seeding complete!"
 puts "Brands: #{Brand.count}"
 puts "Products: #{Product.count}"

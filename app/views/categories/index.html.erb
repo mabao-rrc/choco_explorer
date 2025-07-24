@@ -1,0 +1,11 @@
+<h1>Categories</h1>
+
+<% if Category.any? %>
+  <ul>
+    <% Category.all.each do |category| %>
+      <li><%= category.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No categories available yet.</p>
+<% end %>
