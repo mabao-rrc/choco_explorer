@@ -1,0 +1,14 @@
+<h1><%= @brand.name %></h1>
+
+<% if @brand.products.any? %>
+  <p>Chocolates from this brand:</p>
+  <ul>
+    <% @brand.products.each do |product| %>
+      <li><%= link_to product.name, product_path(product) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No products for this brand.</p>
+<% end %>
+
+<p><%= link_to "Back to Brands", brands_path %></p>

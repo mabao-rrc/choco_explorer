@@ -6,15 +6,17 @@
 
 <p><strong>Ingredients:</strong> <%= @product.ingredients %></p>
 <p><strong>Nutrition Info:</strong> <%= @product.nutrition_info %></p>
-<p><strong>Brand:</strong> <%= @product.brand.name if @product.brand %></p>
+
+<p><strong>Brand:</strong> 
+  <%= link_to @product.brand.name, brand_path(@product.brand) if @product.brand %>
+</p>
 
 <p><strong>Origin Countries:</strong>
-  <%= @product.countries.map(&:name).join(', ') if @product.countries.any? %>
+  <%= @product.countries.map { |c| link_to c.name, country_path(c) }.join(', ').html_safe if @product.countries.any? %>
 </p>
 
 <p><strong>Categories:</strong>
-  <%= @product.categories.map(&:name).join(', ') if @product.categories.any? %>
+  <%= @product.categories.map { |cat| link_to cat.name, category_path(cat) }.join(', ').html_safe if @product.categories.any? %>
 </p>
 
-<!-- Add this link at the bottom -->
 <p><%= link_to "Back to Products", products_path %></p>

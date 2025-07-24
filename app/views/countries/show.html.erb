@@ -1,0 +1,14 @@
+<h1><%= @country.name %></h1>
+
+<% if @country.products.any? %>
+  <p>Chocolates from this country:</p>
+  <ul>
+    <% @country.products.each do |product| %>
+      <li><%= link_to product.name, product_path(product) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No products from this country.</p>
+<% end %>
+
+<p><%= link_to "Back to Countries", countries_path %></p>
